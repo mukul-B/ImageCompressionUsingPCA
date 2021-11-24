@@ -14,17 +14,23 @@ def compress_images(DATA, k):
     COV = pca.compute_covariance_matrix(Z)
     L, PCS = pca.find_pcs(COV)
     Z_star = pca.project_data(Z, PCS, L, k, 0)
-    print(Z_star.shape)
+    # print(Z_star.shape)
+    # print(PCS.transpose()[:100].shape)
+    z_compression=np.matmul(Z_star,PCS.transpose()[:100]).transpose()
+    print(z_compression.shape)
     height=60
     width=48
 
-    image_reshape=np.array([[Z_star[i + j * width] for i in range(width)] for j in range(height)])
-    print(image_reshape.shape)
-    print(len(Z_star))
-    # for i in range(len(Z_star)):
-    #     out_file=output_dir+"/f"+str(i)+".png"
-    #     print(out_file)
-    #     mpt.imsave(out_file, Z[i][np.newaxis],cmap='gray')
+    # image_reshape=np.array([[z_compression[i + j * width] for i in range(width)] for j in range(height)])
+    # print(image_reshape.shape)
+    print(len(z_compression))
+    # DATA=DATA.transpose()
+    for i in range(len(z_compression)):
+        out_file=output_dir+"/f"+str(i)+".png"
+        # print(out_file)
+        image_reshape = np.array([[z_compression[i][h*width + w] for w in range(width)] for h in range(height)])
+        print(image_reshape.shape)
+        mpt.imsave(out_file, image_reshape,cmap='gray')
     return 0
 
 def load_data(input_dir):
