@@ -6,8 +6,6 @@ def compute_Z(X, centering=True, scaling=False):
     a = X - X_mean
     std = np.std(a, axis=0)
     scal = a / std
-    # print(std,scal)
-    # print(a)
     return scal
 
 
@@ -20,7 +18,19 @@ def find_pcs(COV):
     return w, v
 
 
+def getK(L, var):
+    totalV = L.sum()
+
+    for i in range(len(L)):
+        v = (L[:i].sum()) / totalV
+        if v > var:
+            break
+    return i - 1
+
+
 def project_data(Z, PCS, L, k, var):
+    k = getK(L, var) if k == 0 else k
+
     b = PCS[:k].transpose()
     p = np.dot(Z, b)
     return p
