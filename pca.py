@@ -2,10 +2,16 @@ import numpy as np
 
 
 def compute_Z(X, centering=True, scaling=False):
-    X_mean = np.mean(X, axis=0)
-    a = X - X_mean
-    std = np.std(a, axis=0)
-    scal = a / std
+    if centering:
+        X_mean = np.mean(X, axis=0)
+        a = X - X_mean
+    else:
+        a = X
+    if scaling:
+        std = np.std(a, axis=0)
+        scal = a / std
+    else:
+        scal = a
     return scal
 
 
